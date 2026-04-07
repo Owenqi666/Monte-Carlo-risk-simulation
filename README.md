@@ -60,11 +60,11 @@ $$\text{VaR}_{\text{annual}} = \text{VaR}_{\text{daily}} \times \sqrt{252}$$
 
 ## Results (2016–2026)
 
-| Ticker | s0 | miu | sigma | VaR (MC) | VaR (Hist, daily) | VaR (Hist, annualised) |
+| Ticker | S₀ | μ | σ | VaR (MC) | VaR (Hist, daily) | VaR (Hist, annualised) |
 |---|---|---|---|---|---|---|
-| AAPL | $271.61 | 0.2867 | 0.2905 | -20.26% | -2.76% | -43.85% |
-| META | $659.53 | 0.2627 | 0.3852 | -38.50% | -3.48% | -55.23% |
-| NVDA | $186.49 | 0.6719 | 0.4989 | -23.02% | — | — |
+| AAPL | 271.61 | 0.2867 | 0.2905 | -20.26% | -2.76% | -43.85% |
+| META | 659.53 | 0.2627 | 0.3852 | -38.50% | -3.48% | -55.23% |
+| NVDA | 186.49 | 0.6719 | 0.4989 | -23.02% | — | — |
 
 Monte Carlo VaR consistently underestimates downside risk relative to Historical VaR, reflecting the fat-tailed nature of real return distributions that GBM's normal distribution assumption fails to capture.
 
