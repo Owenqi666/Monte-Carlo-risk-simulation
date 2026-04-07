@@ -24,18 +24,17 @@ def plot_simulations(s, ticker):
     plt.show()
 
 
-def plot_var(final_returns, var, confidence=0.95):
+def plot_var(final_returns, var, ticker, confidence=0.95):
     plt.figure(figsize=(10, 5))
 
     plt.hist(final_returns, bins=50, color='steelblue', edgecolor='white', alpha=0.7)
 
-    # mark VaR on the histogram
     plt.axvline(var, color='red', linewidth=2, label=f'VaR ({confidence*100:.0f}%): {var:.2%}')
 
-    plt.title('Distribution of Final Returns')
+    plt.title(f'{ticker} Distribution of Final Returns')
     plt.xlabel('Return')
     plt.ylabel('Frequency')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('var_distribution.png', dpi=150)
+    plt.savefig(f'{ticker}_var_distribution.png', dpi=150)
     plt.show()

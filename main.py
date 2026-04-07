@@ -29,19 +29,23 @@ for ticker in tickers:
     s0 = float(prices.iloc[-1])
     s = simulate(s0, miu, sigma)
     var, final_returns = calculate_var(s, s0)
-    daily_var, annual_var = calculate_historical_var(returns)
+    historical_var = calculate_historical_var(prices)
+
     results[ticker] = {'s0': s0, 'miu': miu, 'sigma': sigma,
-                    'var': var, 'daily_var': daily_var, 'annual_var': annual_var,
+                    'var': var, 'historical_var': historical_var,
                     'final_returns': final_returns, 's': s}
-    
+
     print(f'\n{ticker}')
     print(f's0: ${s0:.2f}')
     print(f'miu: {miu:.4f}')
     print(f'sigma: {sigma:.4f}')
     print(f'95% VaR (Monte Carlo): {var:.2%}')
-    print(f'95% VaR (Historical, daily): {daily_var:.2%}')
-    print(f'95% VaR (Historical, annualised): {annual_var:.2%}')
+
+    if historical_var is not None:
+        print(f'  95% VaR (Historical)   : {historical_var:.2%}')
+    else:
+        print(f'  95% VaR (Historical)   : insufficient data')
 
 for ticker, data in results.items():
     plot_simulations(data['s'], ticker)
-    plot_var(data['final_returns'], data['var'])
+    plot_var(data['final_returns'], data['var'], ticker)

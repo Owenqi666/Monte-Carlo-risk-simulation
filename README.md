@@ -7,7 +7,7 @@ A Monte Carlo simulation engine that models stochastic stock price paths using G
 - User-defined ticker(s) and date range
 - GBM simulation with 1,000 paths over 252 trading days
 - 95% Monte Carlo VaR estimation
-- Historical VaR (daily and annualised via square root of time rule)
+- Historical VaR (252-day holding period) for direct comparison with Monte Carlo VaR
 - Visualisation: simulated price paths with 90% confidence band and return distribution histogram
 
 ## Strategy Logic
@@ -15,7 +15,7 @@ A Monte Carlo simulation engine that models stochastic stock price paths using G
 2. Estimate annualised drift (miu) and volatility (sigma) from historical daily returns
 3. Simulate 1,000 independent price paths using GBM
 4. Compute 95% Monte Carlo VaR as the 5th percentile of simulated final returns
-5. Compute Historical VaR directly from the 5th percentile of actual daily returns, annualised using $\sigma \sqrt{252}$
+5. Compute Historical VaR as the 5th percentile of actual 252-day holding period returns
 
 ## Methodology
 
@@ -50,23 +50,21 @@ $$\mathrm{VaR}_{0.95} = Q_{0.05}(r_1, r_2, \ldots, r_{1000})$$
 Interpretation: there is a 5% probability that the loss over 252 trading days exceeds $\left|\mathrm{VaR}_{0.95}\right|$
 
 ### Historical VaR
-Historical daily VaR is computed directly from empirical returns without any distributional assumption:
+Historical VaR is computed directly from empirical 252-day holding period returns, matching the same horizon as the Monte Carlo simulation:
 
-$$\text{VaR}_{\text{daily}} = Q_{0.05}(r_1^{\text{hist}}, r_2^{\text{hist}}, \ldots, r_n^{\text{hist}})$$
+$$\text{VaR}_{\text{hist}} = Q_{0.05}(r_1^{\text{hist}}, r_2^{\text{hist}}, \ldots, r_n^{\text{hist}})$$
 
-It is annualised using the square root of time rule, which assumes i.i.d. daily returns:
-
-$$\text{VaR}_{\text{annual}} = \text{VaR}_{\text{daily}} \times \sqrt{252}$$
+where each $r_i^{\text{hist}} = \frac{P_{t} - P_{t-252}}{P_{t-252}}$ is the actual return from holding the stock for 252 trading days ending at day $t$.
 
 ## Results (2016–2026)
 
-| Ticker | S₀ | μ | σ | VaR (MC) | VaR (Hist, daily) | VaR (Hist, annualised) |
-|---|---|---|---|---|---|---|
-| AAPL | 271.61 | 0.2867 | 0.2905 | -20.26% | -2.76% | -43.85% |
-| META | 659.53 | 0.2627 | 0.3852 | -38.50% | -3.48% | -55.23% |
-| NVDA | 186.49 | 0.6719 | 0.4989 | -23.02% | — | — |
+| Ticker | s0 | miu | sigma | VaR (Monte Carlo) | VaR (Historical, 252-day) |
+|---|---|---|---|---|---|
+| AAPL | $271.61 | 0.2867 | 0.2905 | -20.66% | -7.04% |
+| META | $659.53 | 0.2627 | 0.3852 | -35.75% | -54.47% |
+| NVDA | $186.49 | 0.6719 | 0.4989 | -23.65% | -39.60% |
 
-Monte Carlo VaR consistently underestimates downside risk relative to Historical VaR, reflecting the fat-tailed nature of real return distributions that GBM's normal distribution assumption fails to capture.
+Both VaR measures use a 252-day holding period. Monte Carlo VaR underestimates downside risk for META and NVDA relative to Historical VaR, reflecting fat tails in real return distributions that GBM's normal distribution assumption fails to capture. AAPL shows the opposite pattern, suggesting historically more stable 252-day returns than the model predicts.
 
 ## Limitations
 - **Normal distribution assumption**: GBM assumes log-returns are normally distributed. Real returns exhibit fat tails and negative skew, causing Monte Carlo VaR to systematically underestimate extreme losses.

@@ -1,6 +1,7 @@
 import numpy as np
 
 def simulate(s0, miu, sigma, days=252, n_simulations=1000):
+    np.random.seed(42)  #set seed for reproducibility
     dt = 1 / 252  #1 trading day = 1/252 year
 
     #generate all random shock
