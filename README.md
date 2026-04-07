@@ -47,7 +47,7 @@ The 95% VaR is the 5th percentile of the simulated return distribution:
 
 $$\text{VaR}_{95\%} = Q_{0.05}(r_1, r_2, \ldots, r_{1000})$$
 
-Interpretation: there is a 5% probability that the loss over 252 trading days exceeds $|\text{VaR}_{95\%}|$.
+Interpretation: there is a 5% probability that the loss over 252 trading days exceeds $|\text{VaR}_{95\%}|$
 
 ### Historical VaR
 Historical daily VaR is computed directly from empirical returns without any distributional assumption:
