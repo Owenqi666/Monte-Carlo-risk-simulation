@@ -45,9 +45,9 @@ $$r_i = \frac{S_{252}^{(i)} - S_0}{S_0}, \quad i = 1, 2, \ldots, 1000$$
 ### Monte Carlo VaR
 The 95% VaR is the 5th percentile of the simulated return distribution:
 
-$$\text{VaR}_{95\%} = Q_{0.05}(r_1, r_2, \ldots, r_{1000})$$
+$$\mathrm{VaR}_{0.95} = Q_{0.05}(r_1, r_2, \ldots, r_{1000})$$
 
-Interpretation: there is a 5% probability that the loss over 252 trading days exceeds $|\text{VaR}_{95\%}|$
+Interpretation: there is a 5% probability that the loss over 252 trading days exceeds $\left|\mathrm{VaR}_{0.95}\right|$
 
 ### Historical VaR
 Historical daily VaR is computed directly from empirical returns without any distributional assumption:
