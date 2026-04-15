@@ -3,7 +3,7 @@ from simulation import simulate
 from garch import fit_garch, simulate_garch
 from var import calculate_var, calculate_historical_var
 from plot import plot_simulations, plot_var, plot_volatility_paths
-from date import parse_date
+from checkdate import parse_date
 import sys
 import numpy as np
 
