@@ -2,7 +2,7 @@ from data import get_data, estimate_params
 from simulation import simulate
 from garch import fit_garch, simulate_garch
 from var import calculate_var, calculate_historical_var
-from plot import plot_simulations, plot_var, plot_volatility_paths
+from plot import plot_simulations, plot_var, plot_volatility_paths, plot_distribution_comparison
 from checkdate import parse_date
 import sys
 import numpy as np
@@ -39,8 +39,8 @@ for ticker in tickers:
     s_garch, sigmas = simulate_garch(s0, miu, omega, alpha, beta, last_var)
     var_garch, final_returns_garch = calculate_var(s_garch, s0)
 
-    #Historical VaR
-    historical_var = calculate_historical_var(prices)
+    #Historical VaR & returns
+    historical_var, historical_returns = calculate_historical_var(prices)
 
     results[ticker] = {'s0': s0, 'miu': miu, 'sigma': sigma,
                         'omega': omega, 'alpha': alpha, 'beta': beta,
@@ -49,6 +49,7 @@ for ticker in tickers:
                         'historical_var': historical_var,
                         'final_returns_gbm': final_returns_gbm,
                         'final_returns_garch': final_returns_garch,
+                        'historical_returns': historical_returns,
                         's_gbm': s_gbm, 's_garch': s_garch, 'sigmas': sigmas}
 
     print(f'\n{ticker}')
@@ -69,3 +70,14 @@ for ticker, data in results.items():
     plot_simulations(data['s_gbm'], ticker)
     plot_var(data['final_returns_gbm'], data['var_gbm'], ticker)
     plot_volatility_paths(data['sigmas'], ticker, long_run_var=data['long_run_var'])
+
+    if data['historical_returns'] is not None:
+        plot_distribution_comparison(
+            data['final_returns_gbm'],
+            data['final_returns_garch'],
+            data['historical_returns'],
+            data['var_gbm'],
+            data['var_garch'],
+            data['historical_var'],
+            ticker
+        )

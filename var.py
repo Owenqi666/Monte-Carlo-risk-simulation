@@ -9,9 +9,11 @@ def calculate_var(s, s0, confidence=0.95):
 def calculate_historical_var(prices, confidence=0.95):
     #compute 252-day holding period returns from actual price history
     holding_returns = (prices / prices.shift(252) - 1).dropna()
-    
-    if len(holding_returns) < 30:
-        return None
-    
+
+    #need enough samples to reliably estimate the tail quantile
+    min_samples = int(20 / (1 - confidence))
+    if len(holding_returns) < min_samples:
+        return None, None
+
     var = np.percentile(holding_returns, (1 - confidence) * 100)
-    return var
+    return var, holding_returns

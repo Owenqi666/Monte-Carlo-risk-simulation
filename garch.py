@@ -32,7 +32,7 @@ def simulate_garch(s0, miu, omega, alpha, beta, last_var, days=252, n_simulation
 
     r_prev = np.zeros(n_simulations)
 
-    #GARCH-GBM update
+    #GARCH-GBM update (sigma2 is daily variance, miu is annualised)
     for t in range(1, days + 1):
         sigma2[t] = omega + alpha * r_prev ** 2 + beta * sigma2[t-1]
         sigma_t = np.sqrt(sigma2[t])
