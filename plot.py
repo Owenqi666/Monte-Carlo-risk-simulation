@@ -4,15 +4,15 @@ import numpy as np
 def plot_simulations(s, ticker):
     plt.figure(figsize=(12, 6))
 
-    # plot all 1000 paths with low opacity
+    #plot all 1000 paths with low opacity
     plt.plot(s, color='steelblue', alpha=0.05, linewidth=0.5)
 
-    # plot 5th and 95th percentile bands
+    #plot 5th and 95th percentile bands
     lower = np.percentile(s, 5, axis=1)
     upper = np.percentile(s, 95, axis=1)
     plt.fill_between(range(s.shape[0]), lower, upper, alpha=0.2, color='steelblue', label='90% confidence band')
 
-    # plot mean path
+    #plot mean path
     plt.plot(s.mean(axis=1), color='red', linewidth=1.5, label='mean path')
 
     plt.title(f'{ticker} Monte Carlo Simulation (1000 paths, 252 days)')
@@ -37,4 +37,30 @@ def plot_var(final_returns, var, ticker, confidence=0.95):
     plt.legend()
     plt.tight_layout()
     plt.savefig(f'{ticker}_var_distribution.png', dpi=150)
+    plt.show()
+
+def plot_volatility_paths(sigmas, ticker, long_run_var=None, n_show=100):
+    plt.figure(figsize=(12, 6))
+
+    #annualise daily volatility
+    sigmas_annual = sigmas * np.sqrt(252)
+    sample_idx = np.random.choice(sigmas_annual.shape[1], size=n_show, replace=False)
+
+    #plot sampled paths with low opacity
+    plt.plot(sigmas_annual[:, sample_idx], color='steelblue', alpha=0.15, linewidth=0.5)
+
+    #plot mean volatility path
+    plt.plot(sigmas_annual.mean(axis=1), color='red', linewidth=1.5, label='mean volatility')
+
+    #plot long-run unconditional volatility
+    if long_run_var is not None:
+        long_run_vol = np.sqrt(long_run_var * 252)
+        plt.axhline(long_run_vol, color='black', linestyle='--', linewidth=1, label='long-run unconditional vol')
+
+    plt.title(f'{ticker} GARCH(1,1) Simulated Volatility Paths (1000 paths, 252 days)')
+    plt.xlabel('Trading Days')
+    plt.ylabel('Annualised Volatility')
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(f'{ticker}_garch_volatility.png', dpi=150)
     plt.show()
