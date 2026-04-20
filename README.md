@@ -180,7 +180,20 @@ This is the core value of GARCH for practical risk management: it allows VaR to 
 
 ## How to Run
 ```bash
-pip install yfinance numpy matplotlib python-dateutil arch scipy
+pip install -r requirements.txt
 python main.py
 ```
 Enter ticker(s), start date, and end date when prompted.
+
+## Project Structure
+```
+.
+├── main.py         # entry point: orchestrates data, simulation, VaR, plotting
+├── data.py         # yfinance download and annualised parameter estimation
+├── simulation.py   # GBM price path simulation
+├── garch.py        # GARCH(1,1) fitting and time-varying volatility simulation
+├── var.py          # Monte Carlo VaR and Historical VaR calculation
+├── plot.py         # price path, return distribution, and volatility plots
+├── checkdate.py    # user-input date parsing and validation
+└── requirements.txt
+```
